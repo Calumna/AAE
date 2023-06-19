@@ -106,4 +106,30 @@ public class AuthentificationController {
                 .status(HttpStatus.OK)
                 .body(correctPassword);
     }
+
+    @CrossOrigin(origins = "*")
+    @GetMapping("/signOut")
+    public ResponseEntity<Boolean> signOut(@RequestBody JsonNode informations) {
+        JsonNode username = informations.get("username");
+
+        Boolean usernameExists = true;
+
+        if (username.isNull() ) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(null);
+        }
+
+        if(Subscriber.getSubscriberByUsername(username.asText()) == null)
+            usernameExists = false;
+
+        else{
+            Subscriber.deleteSubscriber(username.asText());
+        }
+
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(usernameExists);
+    }
 }

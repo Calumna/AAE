@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Topic {
     private String name;
-    private ArrayList<String> messages = new ArrayList<>();
+    private ArrayList<Message> messages = new ArrayList<>();
     private static ArrayList<Topic> topics = new ArrayList<>();
 
     public Topic(String name){
@@ -16,11 +16,11 @@ public class Topic {
         return name;
     }
 
-    public void sendMessage(String message){
+    public void sendMessage(Message message){
         messages.add(message);
     }
 
-    public ArrayList<String> getMessages(){
+    public ArrayList<Message> getMessages(){
         return messages;
     }
 

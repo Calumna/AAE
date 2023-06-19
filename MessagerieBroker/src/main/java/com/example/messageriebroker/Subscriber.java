@@ -19,11 +19,12 @@ public class Subscriber {
         listOfClients.add(this);
     }
 
-    public void update(String topic, String message) throws IOException, InterruptedException {
-        System.out.println(message);
+    public void update(String topic, Message message) {
+        System.out.println(message.toJson());
 
-        String url = "http://localhost:8080/newMessage/user/queue/specific-user";
-        String body = String.format("{\"topic\": \"%s\", \"content\":\"%s\", \"username\":\"%s\"}", topic, message, username);
+        /*String url = "http://localhost:8080/newMessage/user/queue/specific-user";
+        String body = String.format("{\"topic\": \"%s\", \"date\":\"%s\", \"content\":\"%s\", \"username\":\"%s\"}",
+                topic, message.getDate(), message.getContent(), username);
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -32,7 +33,9 @@ public class Subscriber {
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 
-        HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());*/
+
+        MessageController.getInstance().newMessage(message);
     }
 
     public void addTopic(String topic){

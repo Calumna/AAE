@@ -53,7 +53,7 @@ public final class  Broker {
         return returnVal;
     }
 
-    public void sendMessage(String topic, Subscriber subscriber, String message){
+    public void sendMessage(String topic, Subscriber subscriber, Message message){
         Topic topicInstance = Topic.getTopicByName(topic);
         topicInstance.sendMessage(message);
 
@@ -63,7 +63,7 @@ public final class  Broker {
                 if (s != subscriber) {
                     try {
                         s.update(topic, message);
-                    } catch (IOException | InterruptedException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }

@@ -15,13 +15,18 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 @RestController
 @Controller
 public class MessageController {
-    @Autowired
-    private SimpMessagingTemplate template;
+    private static MessageController messageControllerInstance;
+
+    public static MessageController getInstance() {
+        if (null == messageControllerInstance) {
+            messageControllerInstance = new MessageController();
+        }
+        return messageControllerInstance;
+    }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getTopics")
@@ -89,7 +94,7 @@ public class MessageController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getLastMessages")
-    public ResponseEntity<ArrayList<String>> getLastMessages(@RequestBody JsonNode fil) {
+    public ResponseEntity<ArrayList<Message>> getLastMessages(@RequestBody JsonNode fil) {
         JsonNode topic = fil.get("topic");
 
         if (topic.isNull()) {
@@ -107,8 +112,11 @@ public class MessageController {
     @PostMapping("/sendMessage")
     public ResponseEntity sendMessage(@RequestBody JsonNode message) {
         JsonNode topic = message.get("topic");
+        JsonNode date = message.get("date");
         JsonNode content = message.get("content");
         JsonNode username = message.get("username");
+
+        Message m = new Message(username.asText(), topic.asText(), date.asText(), content.asText());
 
         if (topic.isNull() || message.isNull() || Subscriber.getSubscriberByUsername(username.asText()) == null) {
             return ResponseEntity
@@ -119,8 +127,8 @@ public class MessageController {
         JedisPool jedisPool = new JedisPool(new JedisPoolConfig(), "localhost", 6379);
 
         try (Jedis jedis = jedisPool.getResource()) {
-            Broker.getInstance().sendMessage(topic.asText(), Subscriber.getSubscriberByUsername(username.asText()), content.asText());
-            jedis.zadd(topic.asText(), 0, content.asText());
+            Broker.getInstance().sendMessage(topic.asText(), Subscriber.getSubscriberByUsername(username.asText()), m);
+            jedis.zadd(topic.asText(), 0, m.toJson());
 
             jedisPool.close();
         }
@@ -128,5 +136,11 @@ public class MessageController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(null);
+    }
+
+    @MessageMapping("/messagerie-websocket")
+    @SendTo("user/queue/specific-user")
+    public String newMessage(Message message){
+        return message.toJson();
     }
 }
