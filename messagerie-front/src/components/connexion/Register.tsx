@@ -8,6 +8,41 @@ const Register: React.FC<{setUsernameGlobal: (usernameGlobal: string)=>void}> = 
     const [password, setPassword] = useState("");
     const [usernameError, setUsernameError] = useState(false);
     const [passwordError, setPasswordError] = useState(false);
+    const [registering, setRegistering] = useState(false);
+
+    useEffect(() => {
+        if (registering) {
+            console.log("ici");
+            const requestOptions = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username: username, password: password})
+            };
+            fetch('http://localhost:8080/signUp', requestOptions)
+                .then(response => response.json())
+                .then(
+                    (result) => {
+                        if(result){
+                            console.log("marché");
+                            setUsernameGlobal(username);
+                            setRegistering(false);
+                        }
+                        else{
+                            setUsernameError(true);
+                            setPasswordError(true);
+                            setRegistering(false);
+                        }
+
+                    },
+                    () => {
+                        console.log("pas marché");
+                        setUsernameError(true);
+                        setPasswordError(true);
+                        setRegistering(false);
+                    }
+                );
+        }
+    }, [registering])
 
     const handleSubmit = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
@@ -23,7 +58,7 @@ const Register: React.FC<{setUsernameGlobal: (usernameGlobal: string)=>void}> = 
         }
 
         if (username && password) {
-            setUsernameGlobal(username);
+            setRegistering(true);
         }
     }
 

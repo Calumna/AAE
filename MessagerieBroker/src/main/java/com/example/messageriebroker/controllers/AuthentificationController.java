@@ -12,10 +12,12 @@ import redis.clients.jedis.JedisPoolConfig;
 @RestController
 public class AuthentificationController {
     @CrossOrigin(origins = "*")
-    @GetMapping("/signUp")
+    @PostMapping("/signUp")
     public ResponseEntity<Boolean> signUp(@RequestBody JsonNode informations) {
         JsonNode username = informations.get("username");
         JsonNode password = informations.get("password");
+
+        System.out.println(username.asText() + password.asText());
 
         Boolean validUsername = true;
 
@@ -75,10 +77,12 @@ public class AuthentificationController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/signIn")
+    @PostMapping("/signIn")
     public ResponseEntity<Boolean> signIn(@RequestBody JsonNode informations) {
         JsonNode username = informations.get("username");
         JsonNode password = informations.get("password");
+
+        System.out.println(username.asText() + password.asText());
 
         Boolean correctPassword = false;
 
@@ -109,7 +113,7 @@ public class AuthentificationController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/signOut")
+    @PostMapping("/signOut")
     public ResponseEntity<Boolean> signOut(@RequestBody JsonNode informations) {
         JsonNode username = informations.get("username");
 
