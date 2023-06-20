@@ -32,7 +32,7 @@ public class User {
 
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());*/
 
-        WebSocketHandler.getInstance().sendMessageToUser(username, message.toJson());
+        MessageController.getInstance().newMessage(message);
     }
 
     public void addTopic(String topic){

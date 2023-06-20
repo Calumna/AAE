@@ -32,6 +32,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
 
     public void sendMessageToUser(String username, String message) throws IOException {
+        System.out.println(username);
         WebSocketSession session = sessions.get(username);
         if (session != null && session.isOpen()) {
             session.sendMessage(new TextMessage(message));

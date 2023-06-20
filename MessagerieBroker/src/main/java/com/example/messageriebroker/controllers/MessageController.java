@@ -5,10 +5,12 @@ import com.example.messageriebroker.models.Message;
 import com.example.messageriebroker.models.User;
 import com.example.messageriebroker.models.Topic;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
@@ -21,6 +23,9 @@ import java.util.ArrayList;
 @Controller
 public class MessageController {
     private static MessageController messageControllerInstance;
+
+    @Autowired
+    public SimpMessageSendingOperations messagingTemplate;
 
     public static MessageController getInstance() {
         if (null == messageControllerInstance) {
@@ -139,9 +144,8 @@ public class MessageController {
                 .body(null);
     }
 
-    @MessageMapping("/messagerie-websocket")
-    @SendTo("user/queue/specific-user")
-    public String newMessage(Message message){
-        return message.toJson();
+    public void newMessage(Message message){
+        System.out.println("ici");
+        messagingTemplate.convertAndSend("/topîc/" + message.getUsername(), message.toJson());
     }
 }
