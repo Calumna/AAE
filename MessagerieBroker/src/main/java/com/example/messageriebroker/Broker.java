@@ -1,10 +1,12 @@
 package com.example.messageriebroker;
 
+import com.example.messageriebroker.models.Message;
+import com.example.messageriebroker.models.User;
+import com.example.messageriebroker.models.Topic;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -22,18 +24,18 @@ public final class  Broker {
         return brokerInstance;
     }
 
-    private Map<String, Set<Subscriber>> subscribers = new HashMap<>();
+    private Map<String, Set<User>> subscribers = new HashMap<>();
 
-    public boolean deregister(String topic, Subscriber subscriber) {
-        final Set<Subscriber> subs = this.subscribers.get(topic);
-        subscriber.removeTopic(topic);
-        return subs.remove(subscriber);
+    public boolean deregister(String topic, User user) {
+        final Set<User> subs = this.subscribers.get(topic);
+        user.removeTopic(topic);
+        return subs.remove(user);
     }
 
-    public boolean register(String topic, Subscriber subscriber) {
+    public boolean register(String topic, User user) {
         boolean returnVal;
         if (subscribers.containsKey(topic)) {
-            returnVal = subscribers.get(topic).add(subscriber);
+            returnVal = subscribers.get(topic).add(user);
         } else {
             JedisPool jedisPool = new JedisPool(new JedisPoolConfig(), "localhost", 6379);
 
@@ -45,22 +47,22 @@ public final class  Broker {
                 jedisPool.close();
             }
 
-            Set<Subscriber> sub = new HashSet<>();
-            returnVal = sub.add(subscriber);
+            Set<User> sub = new HashSet<>();
+            returnVal = sub.add(user);
             subscribers.put(topic, sub);
         }
-        subscriber.addTopic(topic);
+        user.addTopic(topic);
         return returnVal;
     }
 
-    public void sendMessage(String topic, Subscriber subscriber, Message message){
+    public void sendMessage(String topic, User user, Message message){
         Topic topicInstance = Topic.getTopicByName(topic);
         topicInstance.sendMessage(message);
 
-        final Set<Subscriber> sub = this.subscribers.get(topic);
+        final Set<User> sub = this.subscribers.get(topic);
         if(sub != null) {
             sub.parallelStream().forEach(s -> {
-                if (s != subscriber) {
+                if (s != user) {
                     try {
                         s.update(topic, message);
                     } catch (Exception e) {

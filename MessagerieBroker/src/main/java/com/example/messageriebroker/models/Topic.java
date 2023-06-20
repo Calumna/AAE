@@ -1,4 +1,4 @@
-package com.example.messageriebroker;
+package com.example.messageriebroker.models;
 
 import java.util.ArrayList;
 

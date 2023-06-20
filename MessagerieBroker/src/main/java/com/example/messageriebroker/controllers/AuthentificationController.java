@@ -1,5 +1,6 @@
-package com.example.messageriebroker;
+package com.example.messageriebroker.controllers;
 
+import com.example.messageriebroker.models.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,7 @@ public class AuthentificationController {
                 validUsername = false;
             else {
                 jedis.set(username.asText(), password.asText());
-                new Subscriber(username.asText());
+                new User(username.asText());
             }
 
             jedisPool.close();
@@ -62,7 +63,7 @@ public class AuthentificationController {
                         .body(null);
             else {
                 jedis.del(username.asText());
-                Subscriber.deleteSubscriber(username.asText());
+                User.deleteSubscriber(username.asText());
             }
 
             jedisPool.close();
@@ -94,8 +95,8 @@ public class AuthentificationController {
 
             if (value != null && value.equals(password.asText())) {
                 correctPassword = true;
-                if (Subscriber.getSubscriberByUsername(username.asText()) == null) {
-                    new Subscriber(username.asText());
+                if (User.getSubscriberByUsername(username.asText()) == null) {
+                    new User(username.asText());
                 }
             }
 
@@ -120,11 +121,11 @@ public class AuthentificationController {
                     .body(null);
         }
 
-        if(Subscriber.getSubscriberByUsername(username.asText()) == null)
+        if(User.getSubscriberByUsername(username.asText()) == null)
             usernameExists = false;
 
         else{
-            Subscriber.deleteSubscriber(username.asText());
+            User.deleteSubscriber(username.asText());
         }
 
 

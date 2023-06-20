@@ -1,13 +1,14 @@
-package com.example.messageriebroker;
+package com.example.messageriebroker.controllers;
 
+import com.example.messageriebroker.Broker;
+import com.example.messageriebroker.models.Message;
+import com.example.messageriebroker.models.User;
+import com.example.messageriebroker.models.Topic;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
@@ -33,7 +34,7 @@ public class MessageController {
     public ResponseEntity<ArrayList<String>> getTopicsSubscribed(@RequestBody JsonNode username) {
         JsonNode user = username.get("username");
 
-        if (user != null && Subscriber.getSubscriberByUsername(user.asText()) == null) {
+        if (user != null && User.getSubscriberByUsername(user.asText()) == null) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);
@@ -46,7 +47,7 @@ public class MessageController {
                 topics.add(t.getName());
             }
         } else {
-            topics = Subscriber.getSubscriberByUsername(user.asText()).getTopicSubscribed();
+            topics = User.getSubscriberByUsername(user.asText()).getTopicSubscribed();
         }
 
         return ResponseEntity
@@ -60,13 +61,13 @@ public class MessageController {
         JsonNode username = register.get("username");
         JsonNode topic = register.get("topic");
 
-        if (username.isNull() || topic.isNull() || Subscriber.getSubscriberByUsername(username.asText()) == null) {
+        if (username.isNull() || topic.isNull() || User.getSubscriberByUsername(username.asText()) == null) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
 
-        Broker.getInstance().register(topic.asText(), Subscriber.getSubscriberByUsername(username.asText()));
+        Broker.getInstance().register(topic.asText(), User.getSubscriberByUsername(username.asText()));
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -79,13 +80,13 @@ public class MessageController {
         JsonNode username = deregister.get("username");
         JsonNode topic = deregister.get("topic");
 
-        if (username.isNull() || topic.isNull() || Subscriber.getSubscriberByUsername(username.asText()) == null) {
+        if (username.isNull() || topic.isNull() || User.getSubscriberByUsername(username.asText()) == null) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);
         }
 
-        Broker.getInstance().deregister(topic.asText(), Subscriber.getSubscriberByUsername(username.asText()));
+        Broker.getInstance().deregister(topic.asText(), User.getSubscriberByUsername(username.asText()));
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -118,7 +119,7 @@ public class MessageController {
 
         Message m = new Message(username.asText(), topic.asText(), date.asText(), content.asText());
 
-        if (topic.isNull() || message.isNull() || Subscriber.getSubscriberByUsername(username.asText()) == null) {
+        if (topic.isNull() || message.isNull() || User.getSubscriberByUsername(username.asText()) == null) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);
@@ -127,7 +128,7 @@ public class MessageController {
         JedisPool jedisPool = new JedisPool(new JedisPoolConfig(), "localhost", 6379);
 
         try (Jedis jedis = jedisPool.getResource()) {
-            Broker.getInstance().sendMessage(topic.asText(), Subscriber.getSubscriberByUsername(username.asText()), m);
+            Broker.getInstance().sendMessage(topic.asText(), User.getSubscriberByUsername(username.asText()), m);
             jedis.zadd(topic.asText(), 0, m.toJson());
 
             jedisPool.close();

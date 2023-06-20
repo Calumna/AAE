@@ -1,20 +1,15 @@
-package com.example.messageriebroker;
+package com.example.messageriebroker.models;
 
-import org.springframework.stereotype.Controller;
+import com.example.messageriebroker.controllers.MessageController;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.ArrayList;
 
-public class Subscriber {
+public class User {
     private String username;
-    private static ArrayList<Subscriber> listOfClients = new ArrayList<>();
+    private static ArrayList<User> listOfClients = new ArrayList<>();
     private ArrayList<String> topicSubscribed = new ArrayList<>();
 
-    public Subscriber(String username){
+    public User(String username){
         this.username = username;
         listOfClients.add(this);
     }
@@ -50,23 +45,23 @@ public class Subscriber {
         return topicSubscribed;
     }
 
-    public static ArrayList<Subscriber> getListOfClients(){
+    public static ArrayList<User> getListOfClients(){
         return listOfClients;
     }
 
-    public static Subscriber getSubscriberByUsername(String username){
-        for(Subscriber subscriber : listOfClients){
-            if(subscriber.username.equals(username))
-                return subscriber;
+    public static User getSubscriberByUsername(String username){
+        for(User user : listOfClients){
+            if(user.username.equals(username))
+                return user;
         }
         return null;
     }
 
     public static void deleteSubscriber(String username){
-        Subscriber subToRemove = null;
-        for(Subscriber subscriber : listOfClients){
-            if(subscriber.username.equals(username))
-                subToRemove = subscriber;
+        User subToRemove = null;
+        for(User user : listOfClients){
+            if(user.username.equals(username))
+                subToRemove = user;
         }
         listOfClients.remove(subToRemove);
     }
