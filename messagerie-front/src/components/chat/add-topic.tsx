@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {getTopics} from "./topics";
+import { getTopics } from "./topics";
 import {
     Autocomplete,
     Button,
@@ -12,8 +12,14 @@ import {
 } from "@mui/material";
 import {AddCircleOutline} from "@mui/icons-material";
 import {useNavigate, useOutletContext} from "react-router-dom";
+import { difference } from "lodash";
 
-const AddTopic = () => {
+interface AddTopicProps {
+    userTopics: string[],
+    setUserTopics: (t: string[]) => void
+}
+
+const AddTopic: React.FC<AddTopicProps> = ({userTopics, setUserTopics}:AddTopicProps) => {
     const [topicsLoaded, setTopicsLoaded] = useState<boolean>(false);
     const [topics, setTopics] = useState<string[]>([]);
     const [topicToAdd, setTopicToAdd] = useState<string>('');
@@ -22,7 +28,7 @@ const AddTopic = () => {
     const navigate = useNavigate();
     const username = useOutletContext<string>();
 
-    useEffect(()=>{
+    useEffect(() => {
         if(!topicsLoaded){
             getTopics().then(t => {
                 setTopics(t);
@@ -30,7 +36,6 @@ const AddTopic = () => {
             });
         }
     })
-
 
     const onChangeTopicToAdd = (event: React.SyntheticEvent, value: string, reason: string) => {
         setTopicToAdd(value);
@@ -56,11 +61,11 @@ const AddTopic = () => {
             fetch('http://localhost:8080/register', requestOptions)
                 .then(
                     () => {
-                        setTopics([...topics, topicToAdd]);
+                        setUserTopics([...userTopics, topicToAdd]);
                         navigate(`/topics/${topicToAdd}`, {replace: true});
                     })
         }
-    }, [addNewTopic,topics, topicToAdd, navigate]);
+    }, [addNewTopic,topics, topicToAdd, navigate, userTopics, setUserTopics, username]);
 
     const handleConfirmation = () => {
         setAddNewTopic(true);
@@ -89,7 +94,7 @@ const AddTopic = () => {
                         id="combo-box-topics"
                         renderInput={(params) => <TextField {...params} label="Topic" />}
                         freeSolo
-                        options={topics}
+                        options={difference(topics,userTopics)}
                         onInputChange={onChangeTopicToAdd}
                     />
                 </Grid>

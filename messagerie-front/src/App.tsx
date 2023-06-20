@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {Link, Outlet, useLoaderData, useLocation} from "react-router-dom";
+import React, {useEffect, useState} from 'react';
+import {Link, Outlet, useLocation} from "react-router-dom";
 import {StyledEngineProvider} from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -81,14 +81,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
 }));
 
-export function loader(): string[] {
-    let topics: string[] = [];
-    getTopics().then(t => {
-        topics = t;
-    });
-    return topics;
-}
-
 const getPageTitle = (pathname: string) => {
     let pageTitle: string;
     if (pathname === '/') {
@@ -105,15 +97,20 @@ const getPageTitle = (pathname: string) => {
     return pageTitle;
 }
 
-function App() {
+interface AppProps {
+    username: string,
+    setUsername: (s: string) => void,
+    userTopics: string[],
+    setUserTopics: (t: string[]) => void
+}
+
+const App: React.FC<AppProps> = ({username, setUsername, userTopics, setUserTopics}: AppProps) => {
     const location = useLocation();
     const currentPage: string = getPageTitle(location.pathname);
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
-    const [username, setUsername] = React.useState("");
-    const [isRegistering, setIsRegistering] = React.useState(false);
-    const [topics, setTopics] = React.useState([]);
-    const [topicsLoaded, setTopicsLoaded] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [isRegistering, setIsRegistering] = useState(false);
+    const [topicsLoaded, setTopicsLoaded] = useState<boolean>(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -128,7 +125,7 @@ function App() {
         if(!topicsLoaded){
             if(username!==""){
                 getUserTopics(username).then(t => {
-                    setTopics(t);
+                    setUserTopics(t);
                     setTopicsLoaded(true);
                 });
             }
@@ -186,8 +183,8 @@ function App() {
                                     </ListItemButton>
                                 </ListItem>
                             </Link>
-                            {topics.length > 0 && (
-                                topics.map((topic: string) => (
+                            {userTopics.length > 0 && (
+                                userTopics.map((topic: string) => (
                                     <Link to={`/topics/${topic}`}>
                                         <ListItem key={topic} disablePadding>
                                             <ListItemButton>
