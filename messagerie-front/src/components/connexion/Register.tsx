@@ -1,7 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
 import {Button, TextField} from "@mui/material";
-import {MessageData} from "../../types";
 
 const Register: React.FC<{setUsernameGlobal: (usernameGlobal: string)=>void}> = ({ setUsernameGlobal}) => {
     const [username, setUsername] = useState("");
@@ -42,7 +40,7 @@ const Register: React.FC<{setUsernameGlobal: (usernameGlobal: string)=>void}> = 
                     }
                 );
         }
-    }, [registering])
+    }, [registering, password, setUsernameGlobal, username])
 
     const handleSubmit = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
@@ -50,10 +48,10 @@ const Register: React.FC<{setUsernameGlobal: (usernameGlobal: string)=>void}> = 
         setUsernameError(false);
         setPasswordError(false);
 
-        if (username == '') {
+        if (username === '') {
             setUsernameError(true);
         }
-        if (password == '') {
+        if (password === '') {
             setPasswordError(true);
         }
 

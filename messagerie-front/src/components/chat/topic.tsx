@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import {MessageData} from "../../types";
 import {getMessages} from "./topics";
 import Message from "./message";
-import {Divider, Fab, FormControl, Grid, List, TextField} from "@mui/material";
+import { Fab, Grid, List, TextField} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 
 const Topic = () => {

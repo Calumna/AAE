@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import HomeIcon from '@mui/icons-material/Home';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {
@@ -161,6 +162,16 @@ function App() {
                         <Divider />
                         {topics.length > 0 && (
                                 <List>
+                                    <Link to='/'>
+                                        <ListItem key='home' disablePadding>
+                                            <ListItemButton>
+                                                <HomeIcon />
+                                                <ListItemText>
+                                                    Home
+                                                </ListItemText>
+                                            </ListItemButton>
+                                        </ListItem>
+                                    </Link>
                                     {
                                         topics.map((topic: string) => (
                                             <Link to={`/topics/${topic}`}>
