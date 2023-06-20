@@ -41,6 +41,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
         duration: theme.transitions.duration.leavingScreen,
     }),
     marginLeft: 0,
+    height: '100%',
     ...(open && {
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.easeOut,
@@ -135,7 +136,7 @@ function App() {
     })
 
     return (
-        <div className="App">
+        <div className="App" style={{height: '100%'}}>
             <StyledEngineProvider injectFirst>
                 <Box sx={{ flexGrow: 1 }}>
                     <CssBaseline />

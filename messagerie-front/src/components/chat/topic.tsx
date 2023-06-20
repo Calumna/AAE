@@ -38,7 +38,7 @@ const Topic = () => {
     }, [topicId]);
 
     return (
-        <div>
+        <div style={{height: '100%', position: 'relative'}}>
             { (messages !== null && messages.length > 0) && (
                 <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                     {messages.map((message: MessageData) => (
@@ -54,7 +54,8 @@ const Topic = () => {
                  sx={{
                      padding: '20px',
                      bottom: '0',
-                     position: 'fixed'
+                     right: '0',
+                     position: 'absolute'
             }}>
                 <Grid item xs={11}>
                     <TextField
