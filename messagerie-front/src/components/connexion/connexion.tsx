@@ -10,7 +10,6 @@ const Connexion: React.FC<{setUsernameGlobal: (usernameGlobal: string)=>void}> =
 
     useEffect(() => {
         if (connecting) {
-            console.log("ici");
             const requestOptions = {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -21,7 +20,6 @@ const Connexion: React.FC<{setUsernameGlobal: (usernameGlobal: string)=>void}> =
                 .then(
                     (result) => {
                         if(result){
-                            console.log("marché");
                             setUsernameGlobal(username);
                             setConnecting(false);
                         }
@@ -33,7 +31,6 @@ const Connexion: React.FC<{setUsernameGlobal: (usernameGlobal: string)=>void}> =
 
                     },
                     () => {
-                        console.log("pas marché");
                         setUsernameError(true);
                         setPasswordError(true);
                         setConnecting(false);

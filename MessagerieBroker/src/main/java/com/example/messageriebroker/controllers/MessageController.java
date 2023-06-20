@@ -31,10 +31,8 @@ public class MessageController {
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getTopics")
-    public ResponseEntity<ArrayList<String>> getTopicsSubscribed(@RequestBody JsonNode username) {
-        JsonNode user = username.get("username");
-
-        if (user != null && User.getSubscriberByUsername(user.asText()) == null) {
+    public ResponseEntity<ArrayList<String>> getTopicsSubscribed(@RequestParam(required = false) String username) {
+        if (username != null && User.getSubscriberByUsername(username) == null) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);
@@ -42,13 +40,16 @@ public class MessageController {
 
         ArrayList<String> topics = new ArrayList<>();
 
-        if (user == null) {
+        if (username == null) {
             for (Topic t : Topic.getTopics()) {
                 topics.add(t.getName());
             }
         } else {
-            topics = User.getSubscriberByUsername(user.asText()).getTopicSubscribed();
+            topics = User.getSubscriberByUsername(username).getTopicSubscribed();
         }
+
+        for(String s : topics)
+            System.out.println(s);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -94,11 +95,9 @@ public class MessageController {
     }
 
     @CrossOrigin(origins = "*")
-    @GetMapping("/getLastMessages")
-    public ResponseEntity<ArrayList<Message>> getLastMessages(@RequestBody JsonNode fil) {
-        JsonNode topic = fil.get("topic");
-
-        if (topic.isNull()) {
+    @GetMapping("/getLastMessages/{topic}")
+    public ResponseEntity<ArrayList<Message>> getLastMessages(@PathVariable String topic) {
+        if (topic.equals("")) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);
@@ -106,7 +105,7 @@ public class MessageController {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(Topic.getTopicByName(topic.asText()).getMessages());
+                .body(Topic.getTopicByName(topic).getMessages());
     }
 
     @CrossOrigin(origins = "*")

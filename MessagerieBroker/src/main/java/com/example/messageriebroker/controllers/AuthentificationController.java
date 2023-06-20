@@ -17,8 +17,6 @@ public class AuthentificationController {
         JsonNode username = informations.get("username");
         JsonNode password = informations.get("password");
 
-        System.out.println(username.asText() + password.asText());
-
         Boolean validUsername = true;
 
         if (username.isNull() || password.isNull()) {
@@ -81,8 +79,6 @@ public class AuthentificationController {
     public ResponseEntity<Boolean> signIn(@RequestBody JsonNode informations) {
         JsonNode username = informations.get("username");
         JsonNode password = informations.get("password");
-
-        System.out.println(username.asText() + password.asText());
 
         Boolean correctPassword = false;
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link, Outlet, useLoaderData, useLocation} from "react-router-dom";
 import {StyledEngineProvider} from "@mui/material/styles";
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
@@ -22,7 +22,7 @@ import {
     useTheme,
     Link as MuiLink
 } from "@mui/material";
-import { getTopics } from "./components/chat/topics";
+import { getTopics, getUserTopics } from "./components/chat/topics";
 import Connexion from "./components/connexion/connexion";
 import Register from "./components/connexion/Register";
 
@@ -81,8 +81,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export function loader(): string[] {
-    let topics: string[];
-    topics = getTopics();
+    let topics: string[] = [];
+    getTopics().then(t => {
+        topics = t;
+    });
     return topics;
 }
 
@@ -109,6 +111,8 @@ function App() {
     const [open, setOpen] = React.useState(false);
     const [username, setUsername] = React.useState("");
     const [isRegistering, setIsRegistering] = React.useState(false);
+    const [topics, setTopics] = React.useState([]);
+    const [topicsLoaded, setTopicsLoaded] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -119,7 +123,17 @@ function App() {
         setOpen(false);
     };
 
-    const topics = useLoaderData() as ReturnType<typeof loader>;
+    useEffect(() => {
+        if(!topicsLoaded){
+            if(username!==""){
+                getUserTopics(username).then(t => {
+                    setTopics(t);
+                    setTopicsLoaded(true);
+                });
+            }
+        }
+    })
+
     return (
         <div className="App">
             <StyledEngineProvider injectFirst>
@@ -160,42 +174,43 @@ function App() {
                             </IconButton>
                         </DrawerHeader>
                         <Divider />
-                        {topics.length > 0 && (
-                                <List>
-                                    <Link to='/'>
-                                        <ListItem key='home' disablePadding>
+                        <List>
+                            <Link to='/'>
+                                <ListItem key='home' disablePadding>
+                                    <ListItemButton>
+                                        <HomeIcon />
+                                        <ListItemText>
+                                            Home
+                                        </ListItemText>
+                                    </ListItemButton>
+                                </ListItem>
+                            </Link>
+                            {topics.length > 0 && (
+                                topics.map((topic: string) => (
+                                    <Link to={`/topics/${topic}`}>
+                                        <ListItem key={topic} disablePadding>
                                             <ListItemButton>
-                                                <HomeIcon />
                                                 <ListItemText>
-                                                    Home
+                                                    #{topic}
                                                 </ListItemText>
                                             </ListItemButton>
                                         </ListItem>
                                     </Link>
-                                    {
-                                        topics.map((topic: string) => (
-                                            <Link to={`/topics/${topic}`}>
-                                                <ListItem key={topic} disablePadding>
-                                                    <ListItemButton>
-                                                        <ListItemText>
-                                                            #{topic}
-                                                        </ListItemText>
-                                                    </ListItemButton>
-                                                </ListItem>
-                                            </Link>
-                                        ))
-                                    }
-                                    <Link to='/topics/addTopic'>
-                                        <ListItem key='addTopic' disablePadding>
-                                            <ListItemButton>
-                                                <ListItemText>
-                                                    + Add topic
-                                                </ListItemText>
-                                            </ListItemButton>
-                                        </ListItem>
-                                    </Link>
-                                </List>
+                                ))
                             )}
+                            {username !== "" &&
+                            <Link to='/topics/addTopic'>
+                                <ListItem key='addTopic' disablePadding>
+                                    <ListItemButton>
+                                        <ListItemText>
+                                            + Add topic
+                                        </ListItemText>
+                                    </ListItemButton>
+                                </ListItem>
+                            </Link>
+                            }
+                        </List>
+
                     </Drawer>
                 </Box>
                 <Main open={open}>

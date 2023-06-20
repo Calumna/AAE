@@ -21,12 +21,15 @@ const AddTopic = () => {
     const [addNewTopic, setAddNewTopic] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!topicsLoaded) {
-            setTopics(getTopics());
-            setTopicsLoaded(true);
+    useEffect(()=>{
+        if(!topicsLoaded){
+            getTopics().then(t => {
+                setTopics(t);
+                setTopicsLoaded(true);
+            });
         }
-    },[topicsLoaded, topics]);
+    })
+
 
     const onChangeTopicToAdd = (event: React.SyntheticEvent, value: string, reason: string) => {
         setTopicToAdd(value);
