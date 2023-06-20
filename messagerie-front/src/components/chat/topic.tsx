@@ -36,7 +36,6 @@ const Topic = () => {
               .then(
                   (result) => {
                       setMessages(result);
-                      console.log(result);
                       setMessagesLoaded(true);
                   }
               );

@@ -17,7 +17,6 @@ const getUserTopics = async (username : string) => {
         return [];
     const response = await (fetch('http://localhost:8080/getTopics?username=' + username, requestOptions));
     const responseJson = response.json();
-    console.log(responseJson);
     return responseJson;
 }
 

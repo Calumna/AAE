@@ -117,7 +117,6 @@ const App: React.FC<AppProps> = ({username, setUsername, userTopics, setUserTopi
     };
 
     const handleDrawerClose = () => {
-        console.log(username);
         setOpen(false);
     };
 
