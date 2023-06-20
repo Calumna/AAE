@@ -1,7 +1,7 @@
 interface MessageData {
-    userName: string;
+    username: string;
     date: string;
-    text: string;
+    content: string;
 }
 
 export type {

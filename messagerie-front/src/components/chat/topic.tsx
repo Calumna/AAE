@@ -1,28 +1,64 @@
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useOutletContext, useParams} from "react-router-dom";
 import {MessageData} from "../../types";
-import {getMessages} from "./topics";
 import Message from "./message";
 import { Fab, Grid, List, TextField} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
 
 const Topic = () => {
     let { topicId } = useParams();
-    const [messages, setMessages] = useState<MessageData[]>([]);
+    const username = useOutletContext<string>();
 
+    const [messages, setMessages] = useState<MessageData[]>([]);
+    const [messagesLoaded, setMessagesLoaded] = useState(false);
+
+    const [sendingMessage, setSendingMessage] = useState(false);
     const [messageToSend, setMessageToSend] = useState<string>('');
+    const [newMessageToSend, setNewMessageToSend] = useState<MessageData>();
+
     const onChangeMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMessageToSend(event.target.value);
     }
+
+    useEffect(()=>{
+
+      if(!messagesLoaded && window.location.pathname.endsWith(topicId as string)){
+          const requestOptions = {
+              method: 'GET',
+              headers: {'Content-Type': 'application/json'}
+          };
+          fetch('http://localhost:8080/getLastMessages/' + topicId, requestOptions).then(response => response.json())
+              .then(
+                  (result) => {
+                      setMessages(result);
+                      console.log(result);
+                      setMessagesLoaded(true);
+                  }
+              );
+      }
+    })
+
+    useEffect(()=>{
+        if(sendingMessage){
+            const requestOptions = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username:username, topic: topicId, date:newMessageToSend?.date, content:newMessageToSend?.content})
+            };
+            fetch('http://localhost:8080/sendMessage', requestOptions);
+        }
+    })
 
     const handleSend = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         if (messageToSend !== '') {
             const newMessage: MessageData = {
-                userName: 'toto',
+                username: username,
                 date: Date().toLocaleString(),
-                text: messageToSend
+                content: messageToSend
             }
+            setNewMessageToSend(newMessage);
+            setSendingMessage(true);
             setMessages([
                 ...messages,
                 newMessage
@@ -30,12 +66,6 @@ const Topic = () => {
             setMessageToSend('');
         }
     }
-
-    useEffect(() => {
-        if (topicId !== undefined) {
-            setMessages(getMessages(topicId));
-        }
-    }, [topicId]);
 
     return (
         <div style={{height: '100%', position: 'relative'}}>

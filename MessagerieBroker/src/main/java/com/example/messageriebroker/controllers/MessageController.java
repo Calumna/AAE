@@ -48,9 +48,6 @@ public class MessageController {
             topics = User.getSubscriberByUsername(username).getTopicSubscribed();
         }
 
-        for(String s : topics)
-            System.out.println(s);
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(topics);
@@ -61,8 +58,7 @@ public class MessageController {
     public ResponseEntity register(@RequestBody JsonNode register) {
         JsonNode username = register.get("username");
         JsonNode topic = register.get("topic");
-
-        System.out.println(username.asText() + " " + topic.asText());
+        
         if (username.isNull() || topic.isNull() || User.getSubscriberByUsername(username.asText()) == null) {
             System.out.println("fuck you");
             return ResponseEntity
@@ -105,6 +101,9 @@ public class MessageController {
                     .body(null);
         }
 
+        for(Message m : Topic.getTopicByName(topic).getMessages()){
+            System.out.println(m.toJson());
+        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Topic.getTopicByName(topic).getMessages());

@@ -8,7 +8,7 @@ const Message: React.FC<{message: MessageData}> = ({ message}) => {
         <>
             <ListItem alignItems="flex-start">
                 <ListItemText
-                    primary={message.text}
+                    primary={message.content}
                     secondary={
                         <React.Fragment>
                             <Typography
@@ -17,7 +17,7 @@ const Message: React.FC<{message: MessageData}> = ({ message}) => {
                                 variant="body2"
                                 color="text.secondary"
                             >
-                                {message.userName} - {message.date}
+                                {message.username} - {message.date}
                             </Typography>
                         </React.Fragment>
                     }

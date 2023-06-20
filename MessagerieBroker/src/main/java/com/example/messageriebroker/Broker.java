@@ -51,7 +51,8 @@ public final class  Broker {
             returnVal = sub.add(user);
             subscribers.put(topic, sub);
         }
-        user.addTopic(topic);
+        if(!user.getTopicSubscribed().contains(topic))
+            user.addTopic(topic);
         return returnVal;
     }
 

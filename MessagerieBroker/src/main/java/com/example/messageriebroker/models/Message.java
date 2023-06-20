@@ -19,4 +19,20 @@ public class Message {
         return String.format("{\"username\":\"%s\", \"topic\":\"%s\", \"date\":\"%s\", \"content\":\"%s\"}", username, topic, date, content);
     }
 
+    public String getUsername(){
+        return username;
+    }
+
+    public String getTopic(){
+        return topic;
+    }
+
+    public String getDate(){
+        return date;
+    }
+
+    public String getContent(){
+        return content;
+    }
+
 }
