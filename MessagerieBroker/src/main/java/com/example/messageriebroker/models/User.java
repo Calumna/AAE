@@ -1,6 +1,5 @@
 package com.example.messageriebroker.models;
 
-import com.example.messageriebroker.WebSocketHandler;
 import com.example.messageriebroker.controllers.MessageController;
 
 import java.io.IOException;
