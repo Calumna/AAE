@@ -56,7 +56,7 @@ const Topic = () => {
                      bottom: '0',
                      position: 'fixed'
             }}>
-                <Grid item xs={11} component='form'>
+                <Grid item xs={11}>
                     <TextField
                         type="text"
                         id="outlined-basic-email"

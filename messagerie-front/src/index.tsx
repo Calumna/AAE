@@ -9,6 +9,7 @@ import App, { loader as appLoader } from './App';
 import reportWebVitals from './reportWebVitals';
 import ErrorPage from "./components/error-page";
 import Topic from "./components/chat/topic";
+import AddTopic from "./components/chat/add-topic";
 
 
 const router = createBrowserRouter([
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
                 path: "topics/:topicId",
                 element: <Topic />
             },
+            {
+                path: "topics/addTopic",
+                element: <AddTopic />
+            }
         ],
     },
 ]);

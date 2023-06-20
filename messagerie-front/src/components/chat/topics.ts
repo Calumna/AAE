@@ -1,8 +1,8 @@
 import {MessageData} from "../../types";
 
-const getThreads = () => {
-    const threads: string[] = ["cuisine", "gym"]
-    return threads;
+const getTopics = () => {
+    const topics: string[] = ["cuisine", "gym"]
+    return topics;
 }
 
 const getMessages = (topicName: string) => {
@@ -30,6 +30,6 @@ const getMessages = (topicName: string) => {
 }
 
 export {
-    getThreads,
+    getTopics,
     getMessages
 };

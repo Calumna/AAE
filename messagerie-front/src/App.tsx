@@ -20,7 +20,7 @@ import {
     styled,
     useTheme
 } from "@mui/material";
-import { getThreads } from "./components/chat/topics";
+import { getTopics } from "./components/chat/topics";
 
 
 const drawerWidth = 240;
@@ -77,7 +77,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export function loader(): string[] {
     let topics: string[];
-    topics = getThreads();
+    topics = getTopics();
     return topics;
 }
 
@@ -87,7 +87,12 @@ const getPageTitle = (pathname: string) => {
         pageTitle = 'Home';
     } else {
         pageTitle = pathname.substring(pathname.lastIndexOf('/')+1);
-        pageTitle = pageTitle[0].toUpperCase() + pageTitle.substring(1);
+        if (pageTitle === 'addTopic') {
+            pageTitle = 'Add a topic';
+        } else {
+            pageTitle = pageTitle[0].toUpperCase() + pageTitle.substring(1);
+        }
+
     }
     return pageTitle;
 }
@@ -162,7 +167,7 @@ function App() {
                                             </Link>
                                         ))
                                     }
-                                    <Link to='/'>
+                                    <Link to='/topics/addTopic'>
                                         <ListItem key='addTopic' disablePadding>
                                             <ListItemButton>
                                                 <ListItemText>
