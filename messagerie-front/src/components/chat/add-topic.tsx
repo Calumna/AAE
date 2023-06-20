@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getTopics} from "./topics";
 import {
     Autocomplete,
@@ -11,14 +11,22 @@ import {
     TextField
 } from "@mui/material";
 import {AddCircleOutline} from "@mui/icons-material";
-import { Navigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const AddTopic = () => {
-    const topics = getTopics();
-    const [topicToAdd, setTopicToAdd] = useState('');
-    const [openDialog, setOpenDialog] = useState(false);
-    const [addNewTopic, setAddNewTopic] = useState(false);
-    const [redirect, setRedirect] = useState(false);
+    const [topicsLoaded, setTopicsLoaded] = useState<boolean>(false);
+    const [topics, setTopics] = useState<string[]>([]);
+    const [topicToAdd, setTopicToAdd] = useState<string>('');
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const [addNewTopic, setAddNewTopic] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!topicsLoaded) {
+            setTopics(getTopics());
+            setTopicsLoaded(true);
+        }
+    },[topicsLoaded, topics]);
 
     const onChangeTopicToAdd = (event: React.SyntheticEvent, value: string, reason: string) => {
         setTopicToAdd(value);
@@ -31,12 +39,16 @@ const AddTopic = () => {
             } else {
                 setAddNewTopic(true);
             }
-            if (addNewTopic) {
-                // Register topic
-                setRedirect(true);
-            }
         }
     }
+
+    useEffect(() => {
+        if (addNewTopic) {
+            // Register topic
+            setTopics([...topics, topicToAdd]);
+            navigate(`/topics/${topicToAdd}`, {replace: true});
+        }
+    }, [addNewTopic,topics, topicToAdd, navigate]);
 
     const handleConfirmation = () => {
         setAddNewTopic(true);
@@ -49,7 +61,6 @@ const AddTopic = () => {
 
     return (
         <>
-            {redirect && <Navigate to={`/topics/${topicToAdd}`} /> }
             <Grid
                 component='form'
                 container
