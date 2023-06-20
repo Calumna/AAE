@@ -22,7 +22,7 @@ import {
     useTheme,
     Link as MuiLink
 } from "@mui/material";
-import { getTopics, getUserTopics } from "./components/chat/topics";
+import { getUserTopics } from "./components/chat/topics";
 import Connexion from "./components/connexion/connexion";
 import Register from "./components/connexion/Register";
 

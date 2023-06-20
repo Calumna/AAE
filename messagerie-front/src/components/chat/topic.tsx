@@ -11,6 +11,7 @@ const Topic = () => {
 
     const [messages, setMessages] = useState<MessageData[]>([]);
     const [messagesLoaded, setMessagesLoaded] = useState(false);
+    const [currentTopic, setCurrentTopic] = useState("");
 
     const [sendingMessage, setSendingMessage] = useState(false);
     const [messageToSend, setMessageToSend] = useState<string>('');
@@ -20,7 +21,11 @@ const Topic = () => {
         setMessageToSend(event.target.value);
     }
 
-    useEffect(()=>{
+    useEffect(()=> {
+        if (topicId !== currentTopic) {
+            setCurrentTopic(topicId as string);
+            setMessagesLoaded(false);
+        }
 
       if(!messagesLoaded && window.location.pathname.endsWith(topicId as string)){
           const requestOptions = {
@@ -36,7 +41,7 @@ const Topic = () => {
                   }
               );
       }
-    })
+    }, [topicId, messagesLoaded, currentTopic])
 
     useEffect(()=>{
         if(sendingMessage){
