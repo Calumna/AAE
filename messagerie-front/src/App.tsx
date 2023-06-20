@@ -18,9 +18,13 @@ import {
     ListItemButton,
     ListItemText,
     styled,
-    useTheme
+    useTheme,
+    Link as MuiLink
 } from "@mui/material";
 import { getTopics } from "./components/chat/topics";
+import Connexion from "./components/connexion/connexion";
+import Register from "./components/connexion/Register";
+
 
 
 const drawerWidth = 240;
@@ -102,12 +106,15 @@ function App() {
     const currentPage: string = getPageTitle(location.pathname);
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [username, setUsername] = React.useState("");
+    const [isRegistering, setIsRegistering] = React.useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
     };
 
     const handleDrawerClose = () => {
+        console.log(username);
         setOpen(false);
     };
 
@@ -183,7 +190,15 @@ function App() {
                 <Main open={open}>
                     {location.pathname === '/' ?
                         <Typography variant='h1'>
-                            Welcome !
+                            {username === "" ?
+                                !isRegistering ?
+                                    <div>
+                                        <Connexion setUsernameGlobal={setUsername}/>
+                                        <small>Need an account? <MuiLink onClick={()=>setIsRegistering(true)}>Register here</MuiLink></small>
+                                    </div>
+                                    : <Register setUsernameGlobal={setUsername}/>
+                                : "Welcome " + username + "! Check out your new messages by selecting a topic"
+                            }
                         </Typography>
                         : <Outlet/>
                     }
