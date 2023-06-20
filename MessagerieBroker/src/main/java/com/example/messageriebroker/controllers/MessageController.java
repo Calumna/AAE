@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
@@ -146,6 +147,6 @@ public class MessageController {
 
     public void newMessage(Message message){
         System.out.println("ici");
-        messagingTemplate.convertAndSend("/topîc/" + message.getUsername(), message.toJson());
+        messagingTemplate.convertAndSend("/topîc", message.toJson());
     }
 }

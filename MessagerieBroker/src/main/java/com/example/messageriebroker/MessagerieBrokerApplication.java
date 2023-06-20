@@ -43,7 +43,7 @@ public class MessagerieBrokerApplication {
             e.printStackTrace();
         }
 
-        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
+        //ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         SpringApplication.run(MessagerieBrokerApplication.class, args);
     }
 

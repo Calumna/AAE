@@ -18,7 +18,7 @@ public class User {
 
     public void update(String topic, Message message) throws IOException {
         System.out.println(message.toJson());
-
+        System.out.println("là");
         /*String url = "http://localhost:8080/newMessage/user/queue/specific-user";
         String body = String.format("{\"topic\": \"%s\", \"date\":\"%s\", \"content\":\"%s\", \"username\":\"%s\"}",
                 topic, message.getDate(), message.getContent(), username);
