@@ -11,7 +11,7 @@ import {
     TextField
 } from "@mui/material";
 import {AddCircleOutline} from "@mui/icons-material";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useOutletContext} from "react-router-dom";
 
 const AddTopic = () => {
     const [topicsLoaded, setTopicsLoaded] = useState<boolean>(false);
@@ -20,6 +20,7 @@ const AddTopic = () => {
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [addNewTopic, setAddNewTopic] = useState<boolean>(false);
     const navigate = useNavigate();
+    const username = useOutletContext<string>();
 
     useEffect(()=>{
         if(!topicsLoaded){
@@ -47,9 +48,17 @@ const AddTopic = () => {
 
     useEffect(() => {
         if (addNewTopic) {
-            // Register topic
-            setTopics([...topics, topicToAdd]);
-            navigate(`/topics/${topicToAdd}`, {replace: true});
+            const requestOptions = {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({username:username, topic: topicToAdd})
+            };
+            fetch('http://localhost:8080/register', requestOptions)
+                .then(
+                    () => {
+                        setTopics([...topics, topicToAdd]);
+                        navigate(`/topics/${topicToAdd}`, {replace: true});
+                    })
         }
     }, [addNewTopic,topics, topicToAdd, navigate]);
 

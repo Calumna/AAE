@@ -62,7 +62,9 @@ public class MessageController {
         JsonNode username = register.get("username");
         JsonNode topic = register.get("topic");
 
+        System.out.println(username.asText() + " " + topic.asText());
         if (username.isNull() || topic.isNull() || User.getSubscriberByUsername(username.asText()) == null) {
+            System.out.println("fuck you");
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);

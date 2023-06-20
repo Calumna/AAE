@@ -226,7 +226,7 @@ function App() {
                                 : "Welcome " + username + "! Check out your new messages by selecting a topic"
                             }
                         </Typography>
-                        : <Outlet/>
+                        : <Outlet context={username}/>
                     }
                 </Main>
             </StyledEngineProvider>
