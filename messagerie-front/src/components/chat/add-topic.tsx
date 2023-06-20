@@ -35,7 +35,7 @@ const AddTopic: React.FC<AddTopicProps> = ({userTopics, setUserTopics}:AddTopicP
                 setTopicsLoaded(true);
             });
         }
-    })
+    }, [topicsLoaded])
 
     const onChangeTopicToAdd = (event: React.SyntheticEvent, value: string, reason: string) => {
         setTopicToAdd(value);
