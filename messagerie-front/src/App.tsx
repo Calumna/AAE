@@ -22,7 +22,7 @@ import {
     useTheme,
     Link as MuiLink
 } from "@mui/material";
-import { getTopics, getUserTopics } from "./components/chat/topics";
+import { getUserTopics } from "./components/chat/topics";
 import Connexion from "./components/connexion/connexion";
 import Register from "./components/connexion/Register";
 
@@ -212,18 +212,19 @@ const App: React.FC<AppProps> = ({username, setUsername, userTopics, setUserTopi
                     </Drawer>
                 </Box>
                 <Main open={open}>
-                    {location.pathname === '/' ?
-                        <Typography variant='h1'>
-                            {username === "" ?
-                                !isRegistering ?
-                                    <div>
-                                        <Connexion setUsernameGlobal={setUsername}/>
-                                        <small>Need an account? <MuiLink onClick={()=>setIsRegistering(true)}>Register here</MuiLink></small>
-                                    </div>
-                                    : <Register setUsernameGlobal={setUsername}/>
-                                : "Welcome " + username + "! Check out your new messages by selecting a topic"
-                            }
-                        </Typography>
+                    {location.pathname === '/' ?(
+                        username === "" ? (
+                            !isRegistering ?
+                                <div>
+                                    <Connexion setUsernameGlobal={setUsername}/>
+                                    <small>Need an account? <MuiLink onClick={()=>setIsRegistering(true)}>Register here</MuiLink></small>
+                                </div>
+                                : <Register setUsernameGlobal={setUsername}/>
+                            )
+                            : <Typography variant='h3'>
+                                Welcome {username} ! Check out your new messages by selecting a topic
+                            </Typography>
+                        )
                         : <Outlet context={username}/>
                     }
                 </Main>

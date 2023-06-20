@@ -1,9 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {Route, Routes} from "react-router-dom";
 import App from "./App";
 import Topic from "./components/chat/topic";
 import AddTopic from "./components/chat/add-topic";
-import {getUserTopics} from "./components/chat/topics";
 
 const Routing = () => {
     const [username, setUsername] = useState("");

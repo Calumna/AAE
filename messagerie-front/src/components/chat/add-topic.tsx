@@ -45,8 +45,10 @@ const AddTopic: React.FC<AddTopicProps> = ({userTopics, setUserTopics}:AddTopicP
         if (topicToAdd !== '') {
             if (!topics.includes(topicToAdd)) {
                 setOpenDialog(true);
-            } else {
+            } else if (!userTopics.includes((topicToAdd))){
                 setAddNewTopic(true);
+            } else {
+                alert("You're already registered to this topic");
             }
         }
     }
