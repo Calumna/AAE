@@ -1,7 +1,9 @@
 package com.example.messageriebroker.models;
 
+import com.example.messageriebroker.WebSocketHandler;
 import com.example.messageriebroker.controllers.MessageController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class User {
@@ -14,7 +16,7 @@ public class User {
         listOfClients.add(this);
     }
 
-    public void update(String topic, Message message) {
+    public void update(String topic, Message message) throws IOException {
         System.out.println(message.toJson());
 
         /*String url = "http://localhost:8080/newMessage/user/queue/specific-user";
@@ -30,7 +32,7 @@ public class User {
 
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());*/
 
-        MessageController.getInstance().newMessage(message);
+        WebSocketHandler.getInstance().sendMessageToUser(username, message.toJson());
     }
 
     public void addTopic(String topic){

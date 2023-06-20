@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -41,6 +43,7 @@ public class MessagerieBrokerApplication {
             e.printStackTrace();
         }
 
+        ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
         SpringApplication.run(MessagerieBrokerApplication.class, args);
     }
 
