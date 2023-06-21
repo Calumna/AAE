@@ -34,23 +34,27 @@ public final class  Broker {
 
     public boolean register(String topic, User user) {
         boolean returnVal;
+        JedisPool jedisPool = new JedisPool(new JedisPoolConfig(), "localhost", 6379);
         if (subscribers.containsKey(topic)) {
             returnVal = subscribers.get(topic).add(user);
         } else {
-            JedisPool jedisPool = new JedisPool(new JedisPoolConfig(), "localhost", 6379);
-
             try (Jedis jedis = jedisPool.getResource()) {
                 if(!jedis.zrange("topics", 0, -1).contains(topic)) {
                     jedis.zadd("topics", 0, topic);
                     new Topic(topic);
                 }
-                jedisPool.close();
             }
 
             Set<User> sub = new HashSet<>();
             returnVal = sub.add(user);
             subscribers.put(topic, sub);
         }
+
+        try(Jedis jedis = jedisPool.getResource()) {
+            jedis.zadd(user.getUsername() + "Topics", 0, topic);
+            jedisPool.close();
+        }
+
         if(!user.getTopicSubscribed().contains(topic))
             user.addTopic(topic);
         return returnVal;

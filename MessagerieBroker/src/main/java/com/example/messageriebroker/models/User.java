@@ -15,9 +15,12 @@ public class User {
         listOfClients.add(this);
     }
 
+    public String getUsername(){
+        return username;
+    }
+
     public void update(String topic, Message message) throws IOException {
         System.out.println(message.toJson());
-        System.out.println("là");
         /*String url = "http://localhost:8080/newMessage/user/queue/specific-user";
         String body = String.format("{\"topic\": \"%s\", \"date\":\"%s\", \"content\":\"%s\", \"username\":\"%s\"}",
                 topic, message.getDate(), message.getContent(), username);
@@ -31,7 +34,7 @@ public class User {
 
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());*/
 
-        MessageController.getInstance().newMessage(message);
+        //MessageController.getInstance().newMessage(message);
     }
 
     public void addTopic(String topic){

@@ -66,7 +66,6 @@ public class MessageController {
         JsonNode topic = register.get("topic");
         
         if (username.isNull() || topic.isNull() || User.getSubscriberByUsername(username.asText()) == null) {
-            System.out.println("fuck you");
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(null);
@@ -107,9 +106,6 @@ public class MessageController {
                     .body(null);
         }
 
-        for(Message m : Topic.getTopicByName(topic).getMessages()){
-            System.out.println(m.toJson());
-        }
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(Topic.getTopicByName(topic).getMessages());

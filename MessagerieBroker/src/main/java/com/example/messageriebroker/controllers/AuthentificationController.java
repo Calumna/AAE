@@ -1,5 +1,6 @@
 package com.example.messageriebroker.controllers;
 
+import com.example.messageriebroker.Broker;
 import com.example.messageriebroker.models.User;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+
+import java.util.Set;
 
 @RestController
 public class AuthentificationController {
@@ -97,6 +100,10 @@ public class AuthentificationController {
                 correctPassword = true;
                 if (User.getSubscriberByUsername(username.asText()) == null) {
                     new User(username.asText());
+                    Set<String> topicsRegistered = jedis.zrange(username.asText() + "Topics", 0, -1);
+                    for(String topic : topicsRegistered) {
+                        Broker.getInstance().register(topic, User.getSubscriberByUsername(username.asText()));
+                    }
                 }
             }
 
