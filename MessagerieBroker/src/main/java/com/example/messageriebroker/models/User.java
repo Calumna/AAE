@@ -3,6 +3,10 @@ package com.example.messageriebroker.models;
 import com.example.messageriebroker.controllers.MessageController;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.ArrayList;
 
 public class User {
@@ -19,11 +23,10 @@ public class User {
         return username;
     }
 
-    public void update(String topic, Message message) throws IOException {
+    public void update(String topic, Message message) throws IOException, InterruptedException {
         System.out.println(message.toJson());
-        /*String url = "http://localhost:8080/newMessage/user/queue/specific-user";
-        String body = String.format("{\"topic\": \"%s\", \"date\":\"%s\", \"content\":\"%s\", \"username\":\"%s\"}",
-                topic, message.getDate(), message.getContent(), username);
+        String url = "http://localhost:8080/newMessage/" + username;
+        String body = message.toJson();
 
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder()
@@ -32,7 +35,7 @@ public class User {
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
 
-        HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());*/
+        HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
 
         //MessageController.getInstance().newMessage(message);
     }

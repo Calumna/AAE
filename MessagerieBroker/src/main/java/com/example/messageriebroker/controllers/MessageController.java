@@ -141,8 +141,11 @@ public class MessageController {
                 .body(null);
     }
 
-    public void newMessage(Message message){
+    @CrossOrigin(origins = "*")
+    @PostMapping("/newMessage/{username}")
+    public void newMessage(@PathVariable String username, @RequestBody String message){
         System.out.println("ici");
-        messagingTemplate.convertAndSend("/topîc", message.toJson());
+        System.out.println(message);
+        messagingTemplate.convertAndSend("/topîc/" + username, message);
     }
 }

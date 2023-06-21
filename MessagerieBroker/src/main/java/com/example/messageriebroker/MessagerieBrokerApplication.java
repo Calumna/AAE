@@ -24,6 +24,7 @@ public class MessagerieBrokerApplication {
         JedisPool jedisPool = new JedisPool(new JedisPoolConfig(), "localhost", 6379);
 
         try (Jedis jedis = jedisPool.getResource()) {
+            //jedis.flushAll();
             Set<String> keys = jedis.zrange("topics", 0, -1);
             for (String key : keys) {
                 System.out.print(key + " : ");

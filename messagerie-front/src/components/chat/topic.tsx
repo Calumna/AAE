@@ -4,6 +4,7 @@ import {MessageData} from "../../types";
 import Message from "./message";
 import { Fab, Grid, List, TextField} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
+import SockJS from "sockjs-client";
 
 const Topic = () => {
     let { topicId } = useParams();
@@ -20,6 +21,30 @@ const Topic = () => {
     const onChangeMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setMessageToSend(event.target.value);
     }
+
+    useEffect(() => {
+        if (username !== "") {
+            const socket = new SockJS('http://localhost:8080/messagerie-websocket'); // Remplacez l'URL par celle de votre serveur WebSocket
+
+            socket.onopen = function () {
+                console.log('Connexion WebSocket établie.');
+                socket.send(JSON.stringify({subscribe:'/topic/${username}'}));
+            };
+
+            socket.onmessage = function (e) {
+                const message = e.data;
+                console.log('Message reçu du serveur :', message);
+            };
+
+            socket.onclose = function () {
+                console.log('Connexion WebSocket fermée.');
+            };
+
+            return () => {
+                socket.close(); // Fermez la connexion WebSocket lors du démontage du composant
+            };
+        }
+    }, [username]);
 
     useEffect(()=> {
         if (topicId !== currentTopic) {
