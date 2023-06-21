@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -26,7 +27,7 @@ public class MessageController {
     private static MessageController messageControllerInstance;
 
     @Autowired
-    public SimpMessageSendingOperations messagingTemplate;
+    SimpMessagingTemplate template;
 
     public static MessageController getInstance() {
         if (null == messageControllerInstance) {
@@ -146,6 +147,6 @@ public class MessageController {
     public void newMessage(@PathVariable String username, @RequestBody String message){
         System.out.println("ici");
         System.out.println(message);
-        messagingTemplate.convertAndSend("/topîc/" + username, message);
+        template.convertAndSend("/topic/" + username, message);
     }
 }

@@ -27,7 +27,6 @@ public class User {
         System.out.println(message.toJson());
         String url = "http://localhost:8080/newMessage/" + username;
         String body = message.toJson();
-
         HttpClient httpClient = HttpClient.newHttpClient();
         HttpRequest httpRequest = HttpRequest.newBuilder()
                 .uri(URI.create(url))

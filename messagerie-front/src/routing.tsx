@@ -1,5 +1,4 @@
-import React, {useEffect, useState} from "react";
-import SockJS from 'sockjs-client';
+import React, {useState} from "react";
 import {Route, Routes} from "react-router-dom";
 import App from "./App";
 import Topic from "./components/chat/topic";

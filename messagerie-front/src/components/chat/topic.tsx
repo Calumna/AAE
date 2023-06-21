@@ -4,6 +4,7 @@ import {MessageData} from "../../types";
 import Message from "./message";
 import { Fab, Grid, List, TextField} from "@mui/material";
 import SendIcon from '@mui/icons-material/Send';
+import Stomp from 'stompjs';
 import SockJS from "sockjs-client";
 
 const Topic = () => {
@@ -23,28 +24,35 @@ const Topic = () => {
     }
 
     useEffect(() => {
-        if (username !== "") {
-            const socket = new SockJS('http://localhost:8080/messagerie-websocket'); // Remplacez l'URL par celle de votre serveur WebSocket
+        // Établissement de la connexion WebSocket avec SockJS
+        const socket = new SockJS('http://localhost:8080/messagerie-websocket');
+        const stompClient = Stomp.over(socket);
 
-            socket.onopen = function () {
-                console.log('Connexion WebSocket établie.');
-                socket.send(JSON.stringify({subscribe:'/topic/${username}'}));
-            };
+        // Fonction de callback pour le traitement des messages reçus
+        const handleWebSocketMessage = (message: Stomp.Message) => {
+            console.log(messages);
+            const messageJson = JSON.parse(message.body);
+            if(messageJson.topic === topicId){
+                const newMessage: MessageData = {
+                    username: messageJson.username,
+                    date: messageJson.date,
+                    content: messageJson.content
+                }
+                setMessages([
+                    ...messages,
+                    newMessage
+                ]);
+            }
+        };
 
-            socket.onmessage = function (e) {
-                const message = e.data;
-                console.log('Message reçu du serveur :', message);
-            };
-
-            socket.onclose = function () {
-                console.log('Connexion WebSocket fermée.');
-            };
-
-            return () => {
-                socket.close(); // Fermez la connexion WebSocket lors du démontage du composant
-            };
-        }
-    }, [username]);
+        // Connexion à STOMP
+        stompClient.connect({}, () => {
+            // Souscription à un canal spécifique
+            stompClient.subscribe('/topic/' + username, (m) => handleWebSocketMessage(m));
+        }, (error) => {
+            console.error('Erreur de connexion WebSocket', error);
+        });
+    }, [messages, setMessages, topicId, username]);
 
     useEffect(()=> {
         if (topicId !== currentTopic) {
@@ -63,9 +71,6 @@ const Topic = () => {
                       setMessages(result);
                       console.log(result);
                       setMessagesLoaded(true);
-                      setTimeout(() => {
-                          setMessagesLoaded(false);
-                      },5000);
                   }
               );
       }
