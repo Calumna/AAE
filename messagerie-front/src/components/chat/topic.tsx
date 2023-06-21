@@ -40,7 +40,7 @@ const Topic = () => {
                       setMessagesLoaded(true);
                       setTimeout(() => {
                           setMessagesLoaded(false);
-                      },10000);
+                      },5000);
                   }
               );
       }
@@ -53,13 +53,15 @@ const Topic = () => {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({username:username, topic: topicId, date:newMessageToSend?.date, content:newMessageToSend?.content})
             };
-            fetch('http://localhost:8080/sendMessage', requestOptions);
+            fetch('http://localhost:8080/sendMessage', requestOptions).then(() => {
+                setSendingMessage(false);
+            });
         }
-    })
+    }, [sendingMessage, topicId, username, newMessageToSend]);
 
     const handleSend = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        if (messageToSend !== '') {
+        if (messageToSend !== '' && !sendingMessage) {
             const newMessage: MessageData = {
                 username: username,
                 date: Date().toLocaleString(),
@@ -73,7 +75,7 @@ const Topic = () => {
             ]);
             setMessageToSend('');
         }
-    }
+    };
 
     return (
         <div style={{height: '100%', position: 'relative'}}>
