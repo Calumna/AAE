@@ -36,9 +36,7 @@ public class MessagerieBrokerApplication {
                     Message m = new Message(messageJson.get("username").asText(), key, messageJson.get("date").asText(), messageJson.get("content").asText());
                     topic.sendMessage(m);
                 }
-                System.out.println();
             }
-
             jedisPool.close();
         } catch (JsonProcessingException e) {
             e.printStackTrace();

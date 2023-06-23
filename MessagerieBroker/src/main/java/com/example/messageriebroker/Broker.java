@@ -57,6 +57,7 @@ public final class  Broker {
 
         if(!user.getTopicSubscribed().contains(topic))
             user.addTopic(topic);
+
         return returnVal;
     }
 

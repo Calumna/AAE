@@ -24,17 +24,8 @@ import java.util.ArrayList;
 @RestController
 @Controller
 public class MessageController {
-    private static MessageController messageControllerInstance;
-
     @Autowired
     SimpMessagingTemplate template;
-
-    public static MessageController getInstance() {
-        if (null == messageControllerInstance) {
-            messageControllerInstance = new MessageController();
-        }
-        return messageControllerInstance;
-    }
 
     @CrossOrigin(origins = "*")
     @GetMapping("/getTopics")
@@ -145,8 +136,6 @@ public class MessageController {
     @CrossOrigin(origins = "*")
     @PostMapping("/newMessage/{username}")
     public void newMessage(@PathVariable String username, @RequestBody String message){
-        System.out.println("ici");
-        System.out.println(message);
         template.convertAndSend("/topic/" + username, message);
     }
 }

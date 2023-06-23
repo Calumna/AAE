@@ -24,7 +24,6 @@ public class User {
     }
 
     public void update(String topic, Message message) throws IOException, InterruptedException {
-        System.out.println(message.toJson());
         String url = "http://localhost:8080/newMessage/" + username;
         String body = message.toJson();
         HttpClient httpClient = HttpClient.newHttpClient();
@@ -35,8 +34,6 @@ public class User {
                 .build();
 
         HttpResponse<String> httpResponse = httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
-
-        //MessageController.getInstance().newMessage(message);
     }
 
     public void addTopic(String topic){
@@ -49,10 +46,6 @@ public class User {
 
     public ArrayList<String> getTopicSubscribed(){
         return topicSubscribed;
-    }
-
-    public static ArrayList<User> getListOfClients(){
-        return listOfClients;
     }
 
     public static User getSubscriberByUsername(String username){
